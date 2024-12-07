@@ -1,7 +1,5 @@
 package io.licitat.soccer;
 
-import org.apache.commons.lang3.NotImplementedException;
-
 /**
  * The Match class describes a current match between a home and away team and keeps its score.
  */
@@ -9,8 +7,7 @@ public class Match {
 
     private final Team homeTeam;
     private final Team awayTeam;
-    private final int homeScore;
-    private final int awayScore;
+    private final Score currentScore;
 
     /**
      * Create a new match, initial score is 0 : 0
@@ -18,33 +15,28 @@ public class Match {
      * @param awayTeam
      */
     public Match(Team homeTeam, Team awayTeam) {
-         this (homeTeam, awayTeam, 0, 0);
+        this (homeTeam, awayTeam, new Score(homeTeam, awayTeam));
     }
 
     /**
      * This constructor is only used to create a new instance with updated state
      * @param homeTeam
      * @param awayTeam
-     * @param homeScore
-     * @param awayScore
+     * @param currentScore
      */
-    private Match(Team homeTeam, Team awayTeam, int homeScore, int awayScore) {
+    private Match(Team homeTeam, Team awayTeam, Score currentScore) {
         assert homeTeam != null : "Home team can not be null";
         assert awayTeam != null : "Away team can not be null";
         assert
-                !homeTeam.isTheSameTeam(awayTeam)
-                : String.format(
+            !homeTeam.isTheSameTeam(awayTeam)
+            : String.format(
                 "Home and away teams must be different. Trying to create a match between %s and %s",
                 homeTeam.name(), awayTeam.name()
-        );
-
-        assert homeScore >= 0 : "Home score may not be negative";
-        assert awayScore >= 0 : "Away score may not be negative";
+            );
 
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
-        this.homeScore = homeScore;
-        this.awayScore = awayScore;
+        this.currentScore = currentScore;
     }
 
     public Team getHomeTeam() {
@@ -56,24 +48,18 @@ public class Match {
     }
 
     public int getHomeScore() {
-        return homeScore;
+        return currentScore.homeTeamScore();
     }
 
     public int getAwayScore() {
-        return awayScore;
+        return currentScore.awayTeamScore();
     }
 
     public Match updateScore(Score newScore) {
-        assert newScore.awayTeamId() == awayTeam.id() : "Invalid away team";
-        assert newScore.awayTeamScore() >= awayScore : "Invalid new away team score";
-
-        assert newScore.homeTeamId() == homeTeam.id() : "Invalid home team";
-        assert newScore.homeTeamScore() >= homeScore : "Invalid new home team score";
-
-        return new Match(homeTeam, awayTeam, newScore.homeTeamScore(), newScore.awayTeamScore());
+        return new Match(homeTeam, awayTeam, currentScore.update(newScore));
     }
 
     public Score getScore() {
-        return new Score(homeTeam.id(), homeScore, awayTeam.id(), awayScore);
+        return currentScore;
     }
 }
