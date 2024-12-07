@@ -7,19 +7,43 @@ import org.apache.commons.lang3.NotImplementedException;
  */
 public class Match {
 
+    private final Team homeTeam;
+    private final Team awayTeam;
+    private final int homeScore = 0;
+    private final int awayScore = 0;
+
+    /**
+     * Create a new match, initial score is 0 : 0
+     * @param homeTeam
+     * @param awayTeam
+     */
     public Match(Team homeTeam, Team awayTeam) {
-        throw new NotImplementedException();
+        assert homeTeam != null : "Home team can not be null";
+        assert awayTeam != null : "Away team can not be null";
+        assert
+            !homeTeam.isTheSameTeam(awayTeam)
+            : String.format(
+                "Home and away teams must be different. Trying to create a match between %s and %s",
+                homeTeam.name(), awayTeam.name()
+            );
+
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
     }
 
     public Team getHomeTeam() {
-        throw new NotImplementedException();
+        return homeTeam;
+    }
+
+    public Team getAwayTeam() {
+        return awayTeam;
     }
 
     public int getHomeScore() {
-        throw new NotImplementedException();
+        return homeScore;
     }
 
     public int getAwayScore() {
-        throw new NotImplementedException();
+        return awayScore;
     }
 }

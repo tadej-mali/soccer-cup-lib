@@ -21,6 +21,6 @@ public class TestTeamFactory {
     }
 
     public static Team getById(TeamId id) {
-        return teamStore.get(id);
+        return teamStore.get(id.getValue());
     }
 }

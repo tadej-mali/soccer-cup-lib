@@ -21,7 +21,7 @@ public class MatchTest {
         //  - we are to develop a simple solution, let's not overengineer from start
         //  - we can refactor it later to theMatch.getHomeTeamId() if needed
         assertEquals(homeTeam.id(), theMatch.getHomeTeam().id());
-        assertEquals(awayTeam.id(), theMatch.getHomeTeam().id());
+        assertEquals(awayTeam.id(), theMatch.getAwayTeam().id());
 
         assertEquals(0, theMatch.getHomeScore());
         assertEquals(0, theMatch.getAwayScore());

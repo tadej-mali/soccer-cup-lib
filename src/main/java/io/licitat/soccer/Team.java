@@ -21,4 +21,17 @@ public record Team(int id, String name) {
         assert id > 0 : "Invalid team Id";
         assert StringUtils.isNotBlank(name) : "Invalid team display name";
     }
+
+    /**
+     * Teams are the same when they have the same Id
+     * @param other team to compare to
+     * @return
+     */
+    public boolean isTheSameTeam(Team other) {
+        if (other == null) {
+            return false;
+        }
+
+        return id == other.id();
+    }
 }

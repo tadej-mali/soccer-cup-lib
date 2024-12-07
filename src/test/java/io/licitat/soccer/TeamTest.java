@@ -1,6 +1,8 @@
 package io.licitat.soccer;
 
 
+import io.licitat.test_data.TeamId;
+import io.licitat.test_data.TestTeamFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,5 +41,21 @@ public class TeamTest {
 
         assertEquals(42, theTeam.id());
         assertEquals("Test team", theTeam.name());
+    }
+
+    @Test
+    public void givenTeamsWithSameId_isTheSameTeam_returnsTrue() {
+        assertEquals(
+            true,
+            TestTeamFactory.getById(TeamId.Argentina).isTheSameTeam(TestTeamFactory.getById(TeamId.Argentina))
+        );
+    }
+
+    @Test
+    public void givenTeamsWithDifferentId_isTheSameTeam_returnsFalse() {
+        assertEquals(
+            false,
+            TestTeamFactory.getById(TeamId.Argentina).isTheSameTeam(TestTeamFactory.getById(TeamId.Australia))
+        );
     }
 }
