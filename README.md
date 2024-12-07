@@ -1,0 +1,1 @@
+# soccer-cup-lib
