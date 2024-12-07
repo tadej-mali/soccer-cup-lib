@@ -37,7 +37,7 @@ public class TeamTest {
     public void givenValidData_toConstructor_isConstructed() {
         var theTeam = new Team(42, "Test team");
 
-        assertEquals(42, theTeam.getId());
-        assertEquals("Test team", theTeam.getName());
+        assertEquals(42, theTeam.id());
+        assertEquals("Test team", theTeam.name());
     }
 }
