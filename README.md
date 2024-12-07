@@ -16,4 +16,20 @@ which is another rationale to use a machine generated unique identifier as a tea
 A simple class describing a match between two teams.
 
 Both teams must be specified and a team can not play against itself.
+The task specification says 
+>Update score. This should receive a pair of absolute scores
 
+For this reason I did not implement any complex rules (like score may change only for one point at a time) and
+the behavior is quite relaxed. I only decided to forbid reducing the score to make it a bit
+less trivial (but in reality one can imagine that an admin need to do this occasionally).
+
+Additionally, the Match class is made immutable, because I want it to describe a match state i.e. a snapshot in time.
+This should make the thread safe implementation a bit easier. However, I did not decide to rename the class at this time,
+so that the feature like changes do not interfere with simple renamings in the git history. 
+
+## Score
+A new class that holds together Ids of both teams and their current score.
+
+In real life, the class would be extended with timestamps and such in order to provide reliable 
+history tracking and proper bookkeeping of match progress. For the sake of simplicity this is omitted for the
+time being.

@@ -46,4 +46,12 @@ public class Match {
     public int getAwayScore() {
         return awayScore;
     }
+
+    public Match updateScore(Score newScore) {
+        throw new NotImplementedException();
+    }
+
+    public Score getScore() {
+        throw new NotImplementedException();
+    }
 }
