@@ -33,3 +33,6 @@ A new class that holds together Ids of both teams and their current score.
 In real life, the class would be extended with timestamps and such in order to provide reliable 
 history tracking and proper bookkeeping of match progress. For the sake of simplicity this is omitted for the
 time being.
+
+# Scoreboard
+This is the class where the behavioral logic as specified will be implemented.
