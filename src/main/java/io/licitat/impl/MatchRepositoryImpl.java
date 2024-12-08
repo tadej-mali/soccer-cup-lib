@@ -61,11 +61,17 @@ public class MatchRepositoryImpl implements MatchRepository {
 
     @Override
     public void RemoveMatch(Match finishedMatch) {
-        throw new NotImplementedException();
+        var matchKey = BuildKey(finishedMatch);
+        store.compute(
+            matchKey,
+            (k, oldValue) -> {
+                assert oldValue != null : "A match with this key does not exist";
+                return null;
+            });
     }
 
     @Override
     public List<Match> GetAllMatches() {
-        throw new NotImplementedException();
+        return store.values().stream().toList();
     }
 }
