@@ -38,11 +38,11 @@ public class MatchTest {
     @Test
     public void givenSameTeams_toConstructor_shallAssert() {
         assertThrows(
-                AssertionError.class,
-                ()-> new Match(
-                        TestTeamFactory.getById(TeamId.Australia),
-                        TestTeamFactory.getById(TeamId.Australia)
-                ));
+            AssertionError.class,
+            ()-> new Match(
+                TestTeamFactory.getById(TeamId.Australia),
+                TestTeamFactory.getById(TeamId.Australia)
+            ));
     }
 
 

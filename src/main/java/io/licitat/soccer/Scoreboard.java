@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface Scoreboard {
 
-    Match StartMatch(int homeTeamId, int awayTeamId);
+    Match StartMatch(Team homeTeam, Team awayTeam);
 
     Match UpdateScore(Score newScore);
 

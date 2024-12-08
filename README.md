@@ -35,4 +35,7 @@ history tracking and proper bookkeeping of match progress. For the sake of simpl
 time being.
 
 # Scoreboard
-This is the class where the behavioral logic as specified will be implemented.
+This is the class where the behavioral logic as specified is implemented.
+
+It performs basic sanity checks, but the actual persistence is delegated to a repository, where also
+concurrency issues shall be handled.

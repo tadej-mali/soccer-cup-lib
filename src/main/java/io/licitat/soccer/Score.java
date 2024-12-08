@@ -81,4 +81,16 @@ public final class Score {
     public int awayTeamScore() {
         return awayTeamScore;
     }
+
+    public int totalScore() {
+        return homeTeamScore + awayTeamScore;
+    }
+
+    public int homeTeamId() {
+        return homeTeamId;
+    }
+
+    public int awayTeamId() {
+        return awayTeamId;
+    }
 }
