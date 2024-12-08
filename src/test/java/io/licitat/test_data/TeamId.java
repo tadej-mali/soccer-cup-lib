@@ -14,7 +14,12 @@ public enum TeamId {
     Uruguay(7),
     Italy(8),
     Argentina(9),
-    Australia(10);
+    Australia(10),
+
+    Slovenia(100),
+    USA(101),
+    Croatia(102),
+    Portugal(103);
 
     private final int value;
 
