@@ -2,7 +2,6 @@ package io.licitat.impl;
 
 import io.licitat.soccer.Score;
 import io.licitat.test_data.TeamId;
-import io.licitat.test_data.TestMatchFactory;
 import org.junit.jupiter.api.Test;
 
 import static io.licitat.test_data.TestMatchFactory.buildNewMatch;
