@@ -119,18 +119,20 @@ public class ScoreboardImplTest {
     }
 
     @Test
-    public void givenNoSuchMatch_updateScore_shallAssert() {
+    public void givenNoSuchMatch_updateScore_shallThrow() {
         var repositoryMock = Mockito.mock(MatchRepository.class);
         var board = new ScoreboardImpl(repositoryMock, displayOrder);
 
         var allMatches = TestMatchFactory.buildMatches();
         when(repositoryMock.GetAllMatches()).thenReturn(allMatches);
 
-        board.UpdateScore(
-            new Score(
-                TeamId.Slovenia.getValue(), 3,
-                TeamId.Portugal.getValue(), 1)
-        );
+        assertThrows(
+            RuntimeException.class,
+            () -> board.UpdateScore(
+                    new Score(
+                    TeamId.Slovenia.getValue(), 3,
+                    TeamId.Portugal.getValue(), 1)
+            ));
     }
 
     @Test
@@ -141,6 +143,9 @@ public class ScoreboardImplTest {
         var allMatches = TestMatchFactory.buildMatches();
         when(repositoryMock.GetAllMatches()).thenReturn(allMatches);
 
-        board.FinishMatch(TestMatchFactory.buildNewMatch(TeamId.Portugal, TeamId.Slovenia));
+        assertThrows(
+            RuntimeException.class,
+            () -> board.FinishMatch(TestMatchFactory.buildNewMatch(TeamId.Portugal, TeamId.Slovenia))
+        );
     }
 }

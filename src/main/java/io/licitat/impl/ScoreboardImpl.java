@@ -19,8 +19,19 @@ public class ScoreboardImpl implements Scoreboard {
         this.byDisplayOrder = displayOrder;
     }
 
+    private boolean isTeamEngaged(Match aMatch, Team aTeam) {
+        return aMatch.getHomeTeam().isTheSameTeam(aTeam) || aMatch.getAwayTeam().isTheSameTeam(aTeam);
+    }
+
     @Override
     public Match StartMatch(Team homeTeam, Team awayTeam) {
+
+        var runningMatches = activeMatchesRepository.GetAllMatches();
+        var engagement = runningMatches.stream()
+            .filter(m -> isTeamEngaged(m, homeTeam) || isTeamEngaged(m, awayTeam))
+            .findAny();
+
+        assert engagement.isEmpty() : "One of the teams is engaged in another match";
 
         var newMatch = new Match(homeTeam, awayTeam);
         activeMatchesRepository.AddMatch(newMatch);
