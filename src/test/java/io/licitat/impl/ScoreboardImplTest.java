@@ -3,7 +3,6 @@ package io.licitat.impl;
 import io.licitat.data.MatchRepository;
 import io.licitat.soccer.Match;
 import io.licitat.soccer.Score;
-import io.licitat.soccer.Team;
 import io.licitat.test_data.TeamId;
 import io.licitat.test_data.TestMatchFactory;
 import io.licitat.test_data.TestTeamFactory;
@@ -66,7 +65,7 @@ public class ScoreboardImplTest {
     }
 
     @Test
-    public void givenMatchOver_FinishMatch_matchRemoved() {
+    public void givenMatchOver_finishMatch_matchRemoved() {
         var repositoryMock = Mockito.mock(MatchRepository.class);
         var board = new ScoreboardImpl(repositoryMock, displayOrder);
         var currentMatch = buildNewMatch(TeamId.Uruguay, TeamId.Spain);
