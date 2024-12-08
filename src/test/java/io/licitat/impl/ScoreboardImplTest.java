@@ -136,7 +136,7 @@ public class ScoreboardImplTest {
     }
 
     @Test
-    public void givenNoSuchMatch_finishMatch_shallAssert() {
+    public void givenNoSuchMatch_finishMatch_shallThrow() {
         var repositoryMock = Mockito.mock(MatchRepository.class);
         var board = new ScoreboardImpl(repositoryMock, displayOrder);
 
