@@ -6,14 +6,15 @@ import io.licitat.soccer.Score;
 import io.licitat.soccer.Scoreboard;
 import io.licitat.soccer.Team;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class ScoreboardImpl implements Scoreboard {
 
     private final MatchRepository activeMatchesRepository;
-    private final MatchSorter byDisplayOrder;
+    private final Comparator<Match> byDisplayOrder;
 
-    public ScoreboardImpl(MatchRepository activeMatchesRepository, MatchSorter displayOrder) {
+    public ScoreboardImpl(MatchRepository activeMatchesRepository, Comparator<Match> displayOrder) {
         this.activeMatchesRepository = activeMatchesRepository;
         this.byDisplayOrder = displayOrder;
     }

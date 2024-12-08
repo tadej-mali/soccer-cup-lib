@@ -1,6 +1,7 @@
 package io.licitat.impl;
 
 import io.licitat.data.MatchRepository;
+import io.licitat.soccer.Match;
 import io.licitat.soccer.Score;
 import io.licitat.test_data.TeamId;
 import io.licitat.test_data.TestMatchFactory;
@@ -8,17 +9,17 @@ import io.licitat.test_data.TestTeamFactory;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Comparator;
 import java.util.Optional;
 
 import static io.licitat.test_data.TestMatchFactory.buildNewMatch;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ScoreboardImplTest {
 
-    private final MatchSorter displayOrder = new MatchSorter();
+    private final Comparator<Match> displayOrder = new MatchSorter();
     @Test
     public void givenNewMatch_startMatch_newMatchCreated() {
 
@@ -81,20 +82,15 @@ public class ScoreboardImplTest {
     @Test
     public void givenActiveMatches_getActiveMatches_getSortedListOfMatches() {
         var repositoryMock = Mockito.mock(MatchRepository.class);
-        var board = new ScoreboardImpl(repositoryMock, displayOrder);
+        @SuppressWarnings("unchecked")
+        var orderMock = (Comparator<Match>)mock(Comparator.class);
+        var board = new ScoreboardImpl(repositoryMock, orderMock);
 
-        when(repositoryMock.GetAllMatches()).thenReturn(TestMatchFactory.buildMatches());
+        var allMatches = TestMatchFactory.buildMatches();
+        when(repositoryMock.GetAllMatches()).thenReturn(allMatches);
 
-        var allMatches = board.GetActiveMatches();
-        var expectedMatches = TestMatchFactory.sortedMatches();
-
-        for (int i = 0; i < allMatches.size(); i++) {
-            var expected = expectedMatches.get(i);
-            var actual = allMatches.get(i);
-            assertTrue(expected.getHomeTeam().isTheSameTeam(actual.getHomeTeam()));
-            assertTrue(expected.getAwayTeam().isTheSameTeam(actual.getAwayTeam()));
-            assertEquals(expected.getHomeScore(), actual.getHomeScore());
-            assertEquals(expected.getAwayScore(), actual.getAwayScore());
-        }
+        var orderedMatches = board.GetActiveMatches();
+        assertEquals(allMatches.size(), orderedMatches.size());
+        verify(orderMock, atLeastOnce()).compare(any(), any());
     }
 }
