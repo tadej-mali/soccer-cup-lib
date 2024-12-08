@@ -2,6 +2,7 @@ package io.licitat.impl;
 
 import io.licitat.soccer.Score;
 import io.licitat.test_data.TeamId;
+import io.licitat.test_data.TestMatchFactory;
 import org.junit.jupiter.api.Test;
 
 import static io.licitat.test_data.TestMatchFactory.buildNewMatch;
@@ -49,5 +50,37 @@ public class MatchRepositoryImplTest {
         assertTrue(persisted.isPresent());
         assertEquals(updatedScore.homeTeamScore(), persisted.get().getHomeScore());
         assertEquals(updatedScore.awayTeamScore(), persisted.get().getAwayScore());
+    }
+
+    @Test
+    public void givenMatchInProgress_removeMatch_matchRemoved() {
+        var repo = new MatchRepositoryImpl();
+        var activeMatch = buildNewMatch(TeamId.Brazil, TeamId.Italy);
+        repo.AddMatch(activeMatch);
+
+        repo.RemoveMatch(activeMatch);
+
+        var persisted = repo.FindMatch(TeamId.Brazil.getValue(), TeamId.Italy.getValue());
+        // One might argue that another match might be inserted in the meantime.
+        // However, this is a unit test and such situation would not happen.
+        assertTrue(persisted.isEmpty());
+    }
+
+    @Test
+    public void givenMatchesInProgress_getAllMatches_shallReturnResult() {
+        var repo = new MatchRepositoryImpl();
+        var activeMatches = TestMatchFactory.buildMatches();
+        activeMatches.forEach(repo::AddMatch);
+
+        var persistedMatches = repo.GetAllMatches();
+        // It really is a O(n^2) operation, but it is a small number of records
+        var allMatchesFound = persistedMatches.stream()
+            .allMatch(p -> activeMatches.stream()
+                .anyMatch(a ->
+                    a.getHomeTeam().isTheSameTeam(p.getHomeTeam())
+                    && a.getAwayTeam().isTheSameTeam(p.getAwayTeam())
+                ));
+
+        assertTrue(allMatchesFound);
     }
 }
