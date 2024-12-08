@@ -5,16 +5,17 @@ import io.licitat.soccer.Match;
 import io.licitat.soccer.Score;
 import io.licitat.soccer.Scoreboard;
 import io.licitat.soccer.Team;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.List;
 
 public class ScoreboardImpl implements Scoreboard {
 
     private final MatchRepository activeMatchesRepository;
+    private final MatchSorter byDisplayOrder;
 
-    public ScoreboardImpl(MatchRepository activeMatchesRepository) {
+    public ScoreboardImpl(MatchRepository activeMatchesRepository, MatchSorter displayOrder) {
         this.activeMatchesRepository = activeMatchesRepository;
+        this.byDisplayOrder = displayOrder;
     }
 
     @Override
@@ -53,12 +54,7 @@ public class ScoreboardImpl implements Scoreboard {
 
         return runningMatches
             .stream()
-            .sorted((m1, m2) -> {
-                if (m1.getScore().totalScore() > m2.getScore().totalScore()) { return -1; }
-                if (m1.getScore().totalScore() < m2.getScore().totalScore()) { return +1; }
-
-                return -m1.getStartedAt().compareTo(m2.getStartedAt());
-            })
+            .sorted(byDisplayOrder)
             .toList();
     }
 }

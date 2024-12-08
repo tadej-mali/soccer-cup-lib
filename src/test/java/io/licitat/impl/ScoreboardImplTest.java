@@ -18,11 +18,12 @@ import static org.mockito.Mockito.when;
 
 public class ScoreboardImplTest {
 
+    private final MatchSorter displayOrder = new MatchSorter();
     @Test
     public void givenNewMatch_startMatch_newMatchCreated() {
 
         var repositoryMock = Mockito.mock(MatchRepository.class);
-        var board = new ScoreboardImpl(repositoryMock);
+        var board = new ScoreboardImpl(repositoryMock, displayOrder);
 
         var newMatch = board.StartMatch(
             TestTeamFactory.getById(TeamId.Germany),
@@ -40,7 +41,7 @@ public class ScoreboardImplTest {
     @Test
     public void givenNewScore_updateScore_scoreUpdated() {
         var repositoryMock = Mockito.mock(MatchRepository.class);
-        var board = new ScoreboardImpl(repositoryMock);
+        var board = new ScoreboardImpl(repositoryMock, displayOrder);
         var currentMatch = buildNewMatch(TeamId.Uruguay, TeamId.Spain);
 
         when(repositoryMock.FindMatch(
@@ -64,7 +65,7 @@ public class ScoreboardImplTest {
     @Test
     public void givenMatchOver_FinishMatch_matchRemoved() {
         var repositoryMock = Mockito.mock(MatchRepository.class);
-        var board = new ScoreboardImpl(repositoryMock);
+        var board = new ScoreboardImpl(repositoryMock, displayOrder);
         var currentMatch = buildNewMatch(TeamId.Uruguay, TeamId.Spain);
 
         when(repositoryMock.FindMatch(
@@ -80,7 +81,7 @@ public class ScoreboardImplTest {
     @Test
     public void givenActiveMatches_getActiveMatches_getSortedListOfMatches() {
         var repositoryMock = Mockito.mock(MatchRepository.class);
-        var board = new ScoreboardImpl(repositoryMock);
+        var board = new ScoreboardImpl(repositoryMock, displayOrder);
 
         when(repositoryMock.GetAllMatches()).thenReturn(TestMatchFactory.buildMatches());
 

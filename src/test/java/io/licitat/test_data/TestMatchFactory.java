@@ -15,7 +15,7 @@ public class TestMatchFactory {
         return buildMatch(homeId, 0, awayId, 0);
     }
 
-    private static Match buildMatch(TeamId homeId, int homeScore, TeamId awayId, int awayScore) {
+    public static Match buildMatch(TeamId homeId, int homeScore, TeamId awayId, int awayScore) {
         return new Match(getById(homeId), getById(awayId))
             .updateScore(
                 new Score(
