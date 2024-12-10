@@ -3,17 +3,18 @@ package io.licitat.impl;
 import io.licitat.data.EntityId;
 import io.licitat.data.MatchRepository;
 import io.licitat.soccer.Match;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 public class MatchRepositoryImpl implements MatchRepository {
 
     private final ConcurrentHashMap<String, Match> store = new ConcurrentHashMap<>();
     private final AtomicInteger lastMatchId = new AtomicInteger(0);
+    private final ConcurrentHashMap<EntityId<Match>, Match> storeById = new ConcurrentHashMap<>();
 
     private String BuildKey (Match aMatch) {
         assert aMatch != null : "Match must not be null";
@@ -34,9 +35,7 @@ public class MatchRepositoryImpl implements MatchRepository {
 
     @Override
     public Optional<Match> FindMatch(EntityId<Match> matchId) {
-//        var matchKey = BuildKey(homeTeamId, awayTeamId);
-//        return Optional.ofNullable(store.get(matchKey));
-        throw new NotImplementedException();
+        return Optional.ofNullable(storeById.get(matchId));
     }
 
     @Override
@@ -45,23 +44,23 @@ public class MatchRepositoryImpl implements MatchRepository {
     }
 
     @Override
-    public void AddMatch(Match aMatch) {
-        var matchKey = BuildKey(aMatch);
+    public void AddMatch(Match aMatch, Supplier<Boolean> precondition) {
+        synchronized (storeById) {
+            assert precondition.get() : "The preconditions for creating new match are not fulfilled";
 
-        store.compute(
-            matchKey,
-            (k, oldValue) -> {
-                assert oldValue == null : "A match with the same key already exists";
-                return aMatch;
-            });
+            storeById.compute(
+                aMatch.getId(),
+                (k, oldValue) -> {
+                    assert oldValue == null : "A match with the same key already exists";
+                    return aMatch;
+                });
+        }
     }
 
     @Override
     public void UpdateMatch(Match updatedMatch) {
-
-        var matchKey = BuildKey(updatedMatch);
-        store.compute(
-            matchKey,
+        storeById.compute(
+            updatedMatch.getId(),
             (k, oldValue) -> {
                 assert oldValue != null : "A match with this key does not exist";
                 return updatedMatch;
@@ -70,9 +69,8 @@ public class MatchRepositoryImpl implements MatchRepository {
 
     @Override
     public void RemoveMatch(Match finishedMatch) {
-        var matchKey = BuildKey(finishedMatch);
-        store.compute(
-            matchKey,
+        storeById.compute(
+            finishedMatch.getId(),
             (k, oldValue) -> {
                 assert oldValue != null : "A match with this key does not exist";
                 return null;
@@ -81,6 +79,6 @@ public class MatchRepositoryImpl implements MatchRepository {
 
     @Override
     public List<Match> GetAllMatches() {
-        return store.values().stream().toList();
+        return storeById.values().stream().toList();
     }
 }
