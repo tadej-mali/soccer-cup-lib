@@ -3,15 +3,16 @@ package io.licitat.impl;
 import io.licitat.data.EntityId;
 import io.licitat.data.MatchRepository;
 import io.licitat.soccer.Match;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MatchRepositoryImpl implements MatchRepository {
 
     private final ConcurrentHashMap<String, Match> store = new ConcurrentHashMap<>();
+    private final AtomicInteger lastMatchId = new AtomicInteger(0);
 
     private String BuildKey (Match aMatch) {
         assert aMatch != null : "Match must not be null";
@@ -38,7 +39,7 @@ public class MatchRepositoryImpl implements MatchRepository {
 
     @Override
     public EntityId<Match> GetNextMatchId() {
-        throw new NotImplementedException();
+        return EntityId.of(lastMatchId.incrementAndGet());
     }
 
     @Override

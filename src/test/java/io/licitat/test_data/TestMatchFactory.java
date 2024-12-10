@@ -16,7 +16,7 @@ public class TestMatchFactory {
     private static AtomicInteger lastMatchUid = new AtomicInteger(0);
 
     public static EntityId<Match> getNextMatchId() {
-        return EntityId.of(lastMatchUid.addAndGet(1));
+        return EntityId.of(lastMatchUid.incrementAndGet());
     }
     public static Match buildNewMatch(TeamId homeId, TeamId awayId) {
         return buildMatch(homeId, 0, awayId, 0);
