@@ -33,7 +33,7 @@ public class ScoreboardImpl implements Scoreboard {
 
         assert engagement.isEmpty() : "One of the teams is engaged in another match";
 
-        var newMatch = new Match(homeTeam, awayTeam);
+        var newMatch = new Match(activeMatchesRepository.GetNextMatchId(), homeTeam, awayTeam);
         activeMatchesRepository.AddMatch(newMatch);
 
         return newMatch;

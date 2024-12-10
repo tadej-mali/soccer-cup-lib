@@ -1,5 +1,7 @@
 package io.licitat.soccer;
 
+import io.licitat.data.EntityId;
+
 import java.time.Instant;
 import java.util.Objects;
 
@@ -7,7 +9,7 @@ import java.util.Objects;
  * The Match class describes a current match between a home and away team and keeps its score.
  */
 public class Match {
-
+    private final EntityId<Match> id;
     private final Instant startedAt;
     private final Team homeTeam;
     private final Team awayTeam;
@@ -15,22 +17,25 @@ public class Match {
 
     /**
      * Create a new match, initial score is 0 : 0
+     *
      * @param homeTeam
      * @param awayTeam
      */
-    public Match(Team homeTeam, Team awayTeam) {
-        this (Instant.now(), homeTeam, awayTeam, new Score(homeTeam, awayTeam));
+    public Match(EntityId<Match> id, Team homeTeam, Team awayTeam) {
+        this (id, Instant.now(), homeTeam, awayTeam, new Score(homeTeam, awayTeam));
     }
 
     /**
      * This constructor is only used to create a new instance with updated state
      *
+     * @param id
      * @param startedAt
      * @param homeTeam
      * @param awayTeam
      * @param currentScore
      */
-    private Match(Instant startedAt, Team homeTeam, Team awayTeam, Score currentScore) {
+    private Match(EntityId<Match> id, Instant startedAt, Team homeTeam, Team awayTeam, Score currentScore) {
+        assert id != null : "Id can not be null";
         assert homeTeam != null : "Home team can not be null";
         assert awayTeam != null : "Away team can not be null";
         assert
@@ -40,6 +45,7 @@ public class Match {
                 homeTeam.name(), awayTeam.name()
             );
 
+        this.id = id;
         this.startedAt = startedAt;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
@@ -67,7 +73,7 @@ public class Match {
     }
 
     public Match updateScore(Score newScore) {
-        return new Match(startedAt, homeTeam, awayTeam, currentScore.update(newScore));
+        return new Match(id, startedAt, homeTeam, awayTeam, currentScore.update(newScore));
     }
 
     public Score getScore() {

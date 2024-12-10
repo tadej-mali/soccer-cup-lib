@@ -9,6 +9,8 @@ public interface MatchRepository {
 
     Optional<Match> FindMatch(int homeTeamId, int awayTeamId);
 
+    EntityId<Match> GetNextMatchId();
+
     void AddMatch(Match aMatch);
 
     void UpdateMatch(Match upadatedMatch);
