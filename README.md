@@ -38,4 +38,20 @@ time being.
 This is the class where the behavioral logic as specified is implemented.
 
 It performs basic sanity checks, but the actual persistence is delegated to a repository, where also
-concurrency issues shall be handled.
+concurrency issues are handled.
+
+## Repository
+Repository implements a data store. It is more or less a simple wrapper around a ConcurrentHashMap.
+The reasons to keep it a separate class and not put the storage collection directly into the Scoreboard are
+- separation of concerns - decouple storage logic from business logic
+- better testability - scoreboard was completely implemented using mocks only
+- extensibility - it is easy to adapt the system to various different stores
+- single responsibility - thread safety was separated from the business logic
+- scoreboard is not exposed to all the features of the backing store, it only sees the features that it uses
+
+The choice of ConcurrentHashMap was due to the additional requirement by recruiter, that the implementation should be 
+thread safe. The usual assumption (as well as the use case - the score is updated only a couple of times during the match,
+but displayed/queried a lot) is that reads are much more frequent than writes and the chosen
+store should handle it well enough.
+
+If time permits I might try to write some more tests to check for the thread safety.
