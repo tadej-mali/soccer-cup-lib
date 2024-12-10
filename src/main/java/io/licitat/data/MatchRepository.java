@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface MatchRepository {
 
-    Optional<Match> FindMatch(int homeTeamId, int awayTeamId);
+    Optional<Match> FindMatch(EntityId<Match> matchId);
 
     EntityId<Match> GetNextMatchId();
 

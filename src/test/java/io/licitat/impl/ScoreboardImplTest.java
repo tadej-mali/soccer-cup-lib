@@ -48,14 +48,12 @@ public class ScoreboardImplTest {
         var board = new ScoreboardImpl(repositoryMock, displayOrder);
         var currentMatch = buildNewMatch(TeamId.Uruguay, TeamId.Spain);
 
-        when(repositoryMock.FindMatch(
-            currentMatch.getHomeTeam().id(), currentMatch.getAwayTeam().id()
-        ))
+        when(repositoryMock.FindMatch(currentMatch.getId()))
             .thenReturn(Optional.of(currentMatch));
 
         var newScore = new Score(
-                currentMatch.getHomeTeam().id(), 2,
-                currentMatch.getAwayTeam().id(), 1
+            currentMatch.getHomeTeam().id(), 2,
+            currentMatch.getAwayTeam().id(), 1
         );
         var updatedMatch = board.UpdateScore(currentMatch.getId(), newScore);
 
@@ -72,10 +70,8 @@ public class ScoreboardImplTest {
         var board = new ScoreboardImpl(repositoryMock, displayOrder);
         var currentMatch = buildNewMatch(TeamId.Uruguay, TeamId.Spain);
 
-        when(repositoryMock.FindMatch(
-                currentMatch.getHomeTeam().id(), currentMatch.getAwayTeam().id()
-        ))
-                .thenReturn(Optional.of(currentMatch));
+        when(repositoryMock.FindMatch(currentMatch.getId()))
+            .thenReturn(Optional.of(currentMatch));
 
         board.FinishMatch(currentMatch);
 

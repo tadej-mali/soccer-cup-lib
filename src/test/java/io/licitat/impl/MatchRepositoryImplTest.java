@@ -13,9 +13,10 @@ public class MatchRepositoryImplTest {
     @Test
     public void givenNewMatch_addMatch_matchPersisted() {
         var repo = new MatchRepositoryImpl();
-        repo.AddMatch(buildNewMatch(TeamId.Brazil, TeamId.Italy));
+        var newMatch = buildNewMatch(TeamId.Brazil, TeamId.Italy);
+        repo.AddMatch(newMatch);
 
-        var persisted = repo.FindMatch(TeamId.Brazil.getValue(), TeamId.Italy.getValue());
+        var persisted = repo.FindMatch(newMatch.getId());
 
         assertTrue(persisted.isPresent());
         assertEquals(TeamId.Brazil.getValue(), persisted.get().getHomeTeam().id());
@@ -45,7 +46,7 @@ public class MatchRepositoryImplTest {
 
         repo.UpdateMatch(updatedMatch);
 
-        var persisted = repo.FindMatch(TeamId.Brazil.getValue(), TeamId.Italy.getValue());
+        var persisted = repo.FindMatch(updatedMatch.getId());
 
         assertTrue(persisted.isPresent());
         assertEquals(updatedScore.homeTeamScore(), persisted.get().getHomeScore());
@@ -78,7 +79,7 @@ public class MatchRepositoryImplTest {
 
         repo.RemoveMatch(activeMatch);
 
-        var persisted = repo.FindMatch(TeamId.Brazil.getValue(), TeamId.Italy.getValue());
+        var persisted = repo.FindMatch(activeMatch.getId());
         // One might argue that another match might be inserted in the meantime.
         // However, this is a unit test and such situation would not happen.
         assertTrue(persisted.isEmpty());
@@ -92,7 +93,7 @@ public class MatchRepositoryImplTest {
         repo.AddMatch(activeMatch);
         repo.RemoveMatch(activeMatch);
 
-        var persisted = repo.FindMatch(TeamId.Brazil.getValue(), TeamId.Italy.getValue());
+        var persisted = repo.FindMatch(activeMatch.getId());
         // One might argue that another match might be inserted in the meantime.
         // However, this is a unit test and such situation would not happen.
         assertTrue(persisted.isEmpty());

@@ -3,6 +3,7 @@ package io.licitat.impl;
 import io.licitat.data.EntityId;
 import io.licitat.data.MatchRepository;
 import io.licitat.soccer.Match;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,9 +33,10 @@ public class MatchRepositoryImpl implements MatchRepository {
     }
 
     @Override
-    public Optional<Match> FindMatch(int homeTeamId, int awayTeamId) {
-        var matchKey = BuildKey(homeTeamId, awayTeamId);
-        return Optional.ofNullable(store.get(matchKey));
+    public Optional<Match> FindMatch(EntityId<Match> matchId) {
+//        var matchKey = BuildKey(homeTeamId, awayTeamId);
+//        return Optional.ofNullable(store.get(matchKey));
+        throw new NotImplementedException();
     }
 
     @Override

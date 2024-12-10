@@ -44,7 +44,7 @@ public class ScoreboardImpl implements Scoreboard {
     public Match UpdateScore(EntityId<Match> matchToUpdateId, Score newScore) {
 
         var theMatch = activeMatchesRepository
-            .FindMatch(newScore.homeTeamId(), newScore.awayTeamId())
+            .FindMatch(matchToUpdateId)
             .orElseThrow(() -> new RuntimeException("No such match in progress"));
 
         var updatedMatch = theMatch.updateScore(newScore);
@@ -55,7 +55,7 @@ public class ScoreboardImpl implements Scoreboard {
     @Override
     public void FinishMatch(Match activeMatch) {
         var theMatch = activeMatchesRepository
-            .FindMatch(activeMatch.getHomeTeam().id(), activeMatch.getAwayTeam().id())
+            .FindMatch(activeMatch.getId())
             .orElseThrow(() -> new RuntimeException("No such match in progress"));
 
         activeMatchesRepository.RemoveMatch(theMatch);
