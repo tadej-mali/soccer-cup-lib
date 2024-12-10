@@ -4,6 +4,7 @@ import io.licitat.soccer.Match;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public interface MatchRepository {
 
@@ -11,7 +12,7 @@ public interface MatchRepository {
 
     EntityId<Match> GetNextMatchId();
 
-    void AddMatch(Match aMatch);
+    void AddMatch(Match aMatch, Supplier<Boolean> precondition);
 
     void UpdateMatch(Match upadatedMatch);
 

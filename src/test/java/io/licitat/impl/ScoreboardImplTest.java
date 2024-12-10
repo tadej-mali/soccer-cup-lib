@@ -39,7 +39,7 @@ public class ScoreboardImplTest {
         assertEquals(0, newMatch.getHomeScore());
         assertEquals(0, newMatch.getAwayScore());
 
-        verify(repositoryMock).AddMatch(newMatch);
+        verify(repositoryMock).AddMatch(eq(newMatch), any());
     }
 
     @Test

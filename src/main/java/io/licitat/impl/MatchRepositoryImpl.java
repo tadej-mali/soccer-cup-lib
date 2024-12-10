@@ -12,26 +12,8 @@ import java.util.function.Supplier;
 
 public class MatchRepositoryImpl implements MatchRepository {
 
-    private final ConcurrentHashMap<String, Match> store = new ConcurrentHashMap<>();
     private final AtomicInteger lastMatchId = new AtomicInteger(0);
     private final ConcurrentHashMap<EntityId<Match>, Match> storeById = new ConcurrentHashMap<>();
-
-    private String BuildKey (Match aMatch) {
-        assert aMatch != null : "Match must not be null";
-
-        return BuildKey(aMatch.getHomeTeam().id(), aMatch.getAwayTeam().id());
-    }
-
-    // 2^31 has 10 characters
-    private final static int LONGEST_INT_LEN = 10;
-    private final static String KEY_FORMAT = "%0" + LONGEST_INT_LEN + "d:%0" + LONGEST_INT_LEN + "d";
-
-    private String BuildKey (int homeTeamId, int awayTeamId) {
-        var min = Math.min(homeTeamId, awayTeamId);
-        var max = Math.max(homeTeamId, awayTeamId);
-
-        return String.format(KEY_FORMAT, min, max);
-    }
 
     @Override
     public Optional<Match> FindMatch(EntityId<Match> matchId) {
