@@ -1,10 +1,12 @@
 package io.licitat.soccer;
 
 import io.licitat.test_data.TeamId;
+import io.licitat.test_data.TestMatchFactory;
 import io.licitat.test_data.TestTeamFactory;
 import org.junit.jupiter.api.Test;
 
 
+import static io.licitat.test_data.TestMatchFactory.getNextMatchId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -27,12 +29,12 @@ public class MatchTest {
 
     @Test
     public void givenNullHomeTeam_toConstructor_shallAssert() {
-        assertThrows(AssertionError.class, ()-> new Match(null, TestTeamFactory.getById(TeamId.Australia)));
+        assertThrows(AssertionError.class, ()-> new Match(getNextMatchId(), TestTeamFactory.getById(TeamId.Australia), null));
     }
 
     @Test
     public void givenNullAwayTeam_toConstructor_shallAssert() {
-        assertThrows(AssertionError.class, ()-> new Match(TestTeamFactory.getById(TeamId.Australia), null));
+        assertThrows(AssertionError.class, ()-> new Match(getNextMatchId(), null, TestTeamFactory.getById(TeamId.Australia)));
     }
 
     @Test
@@ -40,6 +42,7 @@ public class MatchTest {
         assertThrows(
             AssertionError.class,
             ()-> new Match(
+                getNextMatchId(),
                 TestTeamFactory.getById(TeamId.Australia),
                 TestTeamFactory.getById(TeamId.Australia)
             ));
@@ -49,7 +52,7 @@ public class MatchTest {
     private Match buildNewMatch(TeamId homeTeamId, TeamId awayTeamId) {
         var homeTeam = TestTeamFactory.getById(homeTeamId);
         var awayTeam = TestTeamFactory.getById(awayTeamId);
-        return new Match(homeTeam, awayTeam);
+        return new Match(getNextMatchId(), homeTeam, awayTeam);
     }
 
     @Test

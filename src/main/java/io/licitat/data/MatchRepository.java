@@ -4,12 +4,15 @@ import io.licitat.soccer.Match;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public interface MatchRepository {
 
-    Optional<Match> FindMatch(int homeTeamId, int awayTeamId);
+    Optional<Match> FindMatch(EntityId<Match> matchId);
 
-    void AddMatch(Match aMatch);
+    EntityId<Match> GetNextMatchId();
+
+    void AddMatch(Match aMatch, Supplier<Boolean> precondition);
 
     void UpdateMatch(Match upadatedMatch);
 

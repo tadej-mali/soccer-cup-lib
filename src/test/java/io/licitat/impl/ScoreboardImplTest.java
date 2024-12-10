@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.Optional;
 
 import static io.licitat.test_data.TestMatchFactory.buildNewMatch;
+import static io.licitat.test_data.TestMatchFactory.getNextMatchId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -25,11 +26,12 @@ public class ScoreboardImplTest {
     public void givenNewMatch_startMatch_newMatchCreated() {
 
         var repositoryMock = Mockito.mock(MatchRepository.class);
+        when(repositoryMock.GetNextMatchId()).thenReturn(getNextMatchId());
         var board = new ScoreboardImpl(repositoryMock, displayOrder);
 
         var newMatch = board.StartMatch(
-                TestTeamFactory.getById(TeamId.Germany),
-                TestTeamFactory.getById(TeamId.Argentina)
+            TestTeamFactory.getById(TeamId.Germany),
+            TestTeamFactory.getById(TeamId.Argentina)
         );
 
         assertEquals(newMatch.getHomeTeam().id(), TeamId.Germany.getValue());
@@ -37,7 +39,7 @@ public class ScoreboardImplTest {
         assertEquals(0, newMatch.getHomeScore());
         assertEquals(0, newMatch.getAwayScore());
 
-        verify(repositoryMock).AddMatch(newMatch);
+        verify(repositoryMock).AddMatch(eq(newMatch), any());
     }
 
     @Test
@@ -46,16 +48,14 @@ public class ScoreboardImplTest {
         var board = new ScoreboardImpl(repositoryMock, displayOrder);
         var currentMatch = buildNewMatch(TeamId.Uruguay, TeamId.Spain);
 
-        when(repositoryMock.FindMatch(
-                currentMatch.getHomeTeam().id(), currentMatch.getAwayTeam().id()
-        ))
-                .thenReturn(Optional.of(currentMatch));
+        when(repositoryMock.FindMatch(currentMatch.getId()))
+            .thenReturn(Optional.of(currentMatch));
 
         var newScore = new Score(
-                currentMatch.getHomeTeam().id(), 2,
-                currentMatch.getAwayTeam().id(), 1
+            currentMatch.getHomeTeam().id(), 2,
+            currentMatch.getAwayTeam().id(), 1
         );
-        var updatedMatch = board.UpdateScore(newScore);
+        var updatedMatch = board.UpdateScore(currentMatch.getId(), newScore);
 
         verify(repositoryMock).UpdateMatch(updatedMatch);
         assertEquals(currentMatch.getHomeTeam().id(), updatedMatch.getHomeTeam().id());
@@ -70,10 +70,8 @@ public class ScoreboardImplTest {
         var board = new ScoreboardImpl(repositoryMock, displayOrder);
         var currentMatch = buildNewMatch(TeamId.Uruguay, TeamId.Spain);
 
-        when(repositoryMock.FindMatch(
-                currentMatch.getHomeTeam().id(), currentMatch.getAwayTeam().id()
-        ))
-                .thenReturn(Optional.of(currentMatch));
+        when(repositoryMock.FindMatch(currentMatch.getId()))
+            .thenReturn(Optional.of(currentMatch));
 
         board.FinishMatch(currentMatch);
 
@@ -128,10 +126,12 @@ public class ScoreboardImplTest {
         assertThrows(
             RuntimeException.class,
             () -> board.UpdateScore(
+                TestMatchFactory.getNextMatchId(),
                     new Score(
-                    TeamId.Slovenia.getValue(), 3,
-                    TeamId.Portugal.getValue(), 1)
-            ));
+                        TeamId.Slovenia.getValue(), 3,
+                        TeamId.Portugal.getValue(), 1)
+            )
+        );
     }
 
     @Test

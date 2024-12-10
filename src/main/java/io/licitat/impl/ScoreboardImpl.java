@@ -1,5 +1,6 @@
 package io.licitat.impl;
 
+import io.licitat.data.EntityId;
 import io.licitat.data.MatchRepository;
 import io.licitat.soccer.Match;
 import io.licitat.soccer.Score;
@@ -8,6 +9,8 @@ import io.licitat.soccer.Team;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public class ScoreboardImpl implements Scoreboard {
 
@@ -26,24 +29,26 @@ public class ScoreboardImpl implements Scoreboard {
     @Override
     public Match StartMatch(Team homeTeam, Team awayTeam) {
 
-        var runningMatches = activeMatchesRepository.GetAllMatches();
-        var engagement = runningMatches.stream()
-            .filter(m -> isTeamEngaged(m, homeTeam) || isTeamEngaged(m, awayTeam))
-            .findAny();
+        Supplier<Boolean> areTeamsFree = () -> {
+            var runningMatches = activeMatchesRepository.GetAllMatches();
+            var engagement = runningMatches.stream()
+                .filter(m -> isTeamEngaged(m, homeTeam) || isTeamEngaged(m, awayTeam))
+                .findAny();
 
-        assert engagement.isEmpty() : "One of the teams is engaged in another match";
+            return engagement.isEmpty();
+        };
 
-        var newMatch = new Match(homeTeam, awayTeam);
-        activeMatchesRepository.AddMatch(newMatch);
+        var newMatch = new Match(activeMatchesRepository.GetNextMatchId(), homeTeam, awayTeam);
+        activeMatchesRepository.AddMatch(newMatch, areTeamsFree);
 
         return newMatch;
     }
 
     @Override
-    public Match UpdateScore(Score newScore) {
+    public Match UpdateScore(EntityId<Match> matchToUpdateId, Score newScore) {
 
         var theMatch = activeMatchesRepository
-            .FindMatch(newScore.homeTeamId(), newScore.awayTeamId())
+            .FindMatch(matchToUpdateId)
             .orElseThrow(() -> new RuntimeException("No such match in progress"));
 
         var updatedMatch = theMatch.updateScore(newScore);
@@ -54,7 +59,7 @@ public class ScoreboardImpl implements Scoreboard {
     @Override
     public void FinishMatch(Match activeMatch) {
         var theMatch = activeMatchesRepository
-            .FindMatch(activeMatch.getHomeTeam().id(), activeMatch.getAwayTeam().id())
+            .FindMatch(activeMatch.getId())
             .orElseThrow(() -> new RuntimeException("No such match in progress"));
 
         activeMatchesRepository.RemoveMatch(theMatch);

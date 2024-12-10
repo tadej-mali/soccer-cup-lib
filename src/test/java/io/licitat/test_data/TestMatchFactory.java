@@ -1,22 +1,29 @@
 package io.licitat.test_data;
 
+import io.licitat.data.EntityId;
 import io.licitat.soccer.Match;
 import io.licitat.soccer.Score;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.licitat.test_data.TestTeamFactory.getById;
 import static java.lang.Thread.sleep;
 
 public class TestMatchFactory {
 
+    private static AtomicInteger lastMatchUid = new AtomicInteger(0);
+
+    public static EntityId<Match> getNextMatchId() {
+        return EntityId.of(lastMatchUid.incrementAndGet());
+    }
     public static Match buildNewMatch(TeamId homeId, TeamId awayId) {
         return buildMatch(homeId, 0, awayId, 0);
     }
 
     public static Match buildMatch(TeamId homeId, int homeScore, TeamId awayId, int awayScore) {
-        return new Match(getById(homeId), getById(awayId))
+        return new Match(getNextMatchId(), getById(homeId), getById(awayId))
             .updateScore(
                 new Score(
                     homeId.getValue(), homeScore,
