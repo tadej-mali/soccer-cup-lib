@@ -54,7 +54,7 @@ thread safe. The usual assumption (as well as the use case - the score is update
 but displayed/queried a lot) is that reads are much more frequent than writes and the chosen
 store should handle it well enough.
 
-Note: after refactoring the key in the store is now am entity key. On one hand this simplified match management a lot. On
+Note: after refactoring the key in the store is now an entity key. On one hand this simplified match management a lot. On
 the other hand, it is more tricky to assure that the teh match is not already in progress.
 For this reason the `AddMatch` is now using an explicit lock, together with injected precondition 
 validator. This was the fastest way how to support the atomicity without introducing transaction 
