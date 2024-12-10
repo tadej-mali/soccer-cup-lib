@@ -43,7 +43,7 @@ public class ScoreboardImplIntegrationTest {
             currentMatch.getHomeTeam().id(), 2,
             currentMatch.getAwayTeam().id(), 1
         );
-        var updatedMatch = board.UpdateScore(newScore);
+        var updatedMatch = board.UpdateScore(currentMatch.getId(), newScore);
 
         assertEquals(currentMatch.getHomeTeam().id(), updatedMatch.getHomeTeam().id());
         assertEquals(currentMatch.getAwayTeam().id(), updatedMatch.getAwayTeam().id());

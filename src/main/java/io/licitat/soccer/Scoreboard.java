@@ -1,5 +1,7 @@
 package io.licitat.soccer;
 
+import io.licitat.data.EntityId;
+
 import java.util.List;
 
 /**
@@ -9,7 +11,7 @@ public interface Scoreboard {
 
     Match StartMatch(Team homeTeam, Team awayTeam);
 
-    Match UpdateScore(Score newScore);
+    Match UpdateScore(EntityId<Match> matchToUpdateId, Score newScore);
 
     void FinishMatch(Match activeMatch);
 

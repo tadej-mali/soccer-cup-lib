@@ -1,5 +1,6 @@
 package io.licitat.impl;
 
+import io.licitat.data.EntityId;
 import io.licitat.data.MatchRepository;
 import io.licitat.soccer.Match;
 import io.licitat.soccer.Score;
@@ -40,7 +41,7 @@ public class ScoreboardImpl implements Scoreboard {
     }
 
     @Override
-    public Match UpdateScore(Score newScore) {
+    public Match UpdateScore(EntityId<Match> matchToUpdateId, Score newScore) {
 
         var theMatch = activeMatchesRepository
             .FindMatch(newScore.homeTeamId(), newScore.awayTeamId())
