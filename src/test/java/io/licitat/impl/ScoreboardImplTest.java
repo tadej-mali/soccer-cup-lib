@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.Optional;
 
 import static io.licitat.test_data.TestMatchFactory.buildNewMatch;
+import static io.licitat.test_data.TestMatchFactory.getNextMatchId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -25,11 +26,12 @@ public class ScoreboardImplTest {
     public void givenNewMatch_startMatch_newMatchCreated() {
 
         var repositoryMock = Mockito.mock(MatchRepository.class);
+        when(repositoryMock.GetNextMatchId()).thenReturn(getNextMatchId());
         var board = new ScoreboardImpl(repositoryMock, displayOrder);
 
         var newMatch = board.StartMatch(
-                TestTeamFactory.getById(TeamId.Germany),
-                TestTeamFactory.getById(TeamId.Argentina)
+            TestTeamFactory.getById(TeamId.Germany),
+            TestTeamFactory.getById(TeamId.Argentina)
         );
 
         assertEquals(newMatch.getHomeTeam().id(), TeamId.Germany.getValue());
@@ -47,9 +49,9 @@ public class ScoreboardImplTest {
         var currentMatch = buildNewMatch(TeamId.Uruguay, TeamId.Spain);
 
         when(repositoryMock.FindMatch(
-                currentMatch.getHomeTeam().id(), currentMatch.getAwayTeam().id()
+            currentMatch.getHomeTeam().id(), currentMatch.getAwayTeam().id()
         ))
-                .thenReturn(Optional.of(currentMatch));
+            .thenReturn(Optional.of(currentMatch));
 
         var newScore = new Score(
                 currentMatch.getHomeTeam().id(), 2,
