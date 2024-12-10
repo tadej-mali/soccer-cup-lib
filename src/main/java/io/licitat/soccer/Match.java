@@ -52,6 +52,10 @@ public class Match {
         this.currentScore = currentScore;
     }
 
+    public EntityId<Match> getId() {
+        return id;
+    }
+
     public Instant getStartedAt() {
         return startedAt;
     }
