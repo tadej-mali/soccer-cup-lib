@@ -1,7 +1,7 @@
 package io.licitat.soccer;
 
+import io.licitat.data.EntityId;
 import io.licitat.test_data.TeamId;
-import io.licitat.test_data.TestMatchFactory;
 import io.licitat.test_data.TestTeamFactory;
 import org.junit.jupiter.api.Test;
 
@@ -20,8 +20,8 @@ public class MatchTest {
         //  - the Match and Team can be considered "frinds" - they are tightly connected in the domain
         //  - we are to develop a simple solution, let's not overengineer from start
         //  - we can refactor it later to theMatch.getHomeTeamId() if needed
-        assertEquals(TeamId.Argentina.getValue(), theMatch.getHomeTeam().id());
-        assertEquals(TeamId.Australia.getValue(), theMatch.getAwayTeam().id());
+        assertEquals(EntityId.of(TeamId.Argentina.getValue()), theMatch.getHomeTeam().id());
+        assertEquals(EntityId.of(TeamId.Australia.getValue()), theMatch.getAwayTeam().id());
 
         assertEquals(0, theMatch.getHomeScore());
         assertEquals(0, theMatch.getAwayScore());
@@ -77,14 +77,14 @@ public class MatchTest {
         var theMatch = buildNewMatch(TeamId.France, TeamId.Brazil);
 
         var invalidHomeTeamScore = new Score(
-            TeamId.Mexico.getValue(), 3,
+            EntityId.of(TeamId.Mexico.getValue()), 3,
             theMatch.getAwayTeam().id(), 2
         );
         assertThrows(AssertionError.class, () -> theMatch.updateScore(invalidHomeTeamScore));
 
         var invalidAwayTeamScore = new Score(
             theMatch.getHomeTeam().id(), 3,
-            TeamId.Uruguay.getValue(), 2
+            EntityId.of(TeamId.Uruguay.getValue()), 2
         );
         assertThrows(AssertionError.class, () -> theMatch.updateScore(invalidAwayTeamScore));
 
@@ -97,8 +97,8 @@ public class MatchTest {
         {
             var theMatch = buildNewMatch(TeamId.France, TeamId.Brazil);
             var currentScore = new Score(
-                    theMatch.getHomeTeam().id(), 3,
-                    theMatch.getAwayTeam().id(), 2
+                theMatch.getHomeTeam().id(), 3,
+                theMatch.getAwayTeam().id(), 2
             );
             currentMatch = theMatch.updateScore(currentScore);
         };

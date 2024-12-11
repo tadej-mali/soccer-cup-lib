@@ -13,7 +13,7 @@ import static java.lang.Thread.sleep;
 
 public class TestMatchFactory {
 
-    private static AtomicInteger lastMatchUid = new AtomicInteger(0);
+    private static final AtomicInteger lastMatchUid = new AtomicInteger(0);
 
     public static EntityId<Match> getNextMatchId() {
         return EntityId.of(lastMatchUid.incrementAndGet());
@@ -26,8 +26,8 @@ public class TestMatchFactory {
         return new Match(getNextMatchId(), getById(homeId), getById(awayId))
             .updateScore(
                 new Score(
-                    homeId.getValue(), homeScore,
-                    awayId.getValue(), awayScore)
+                    EntityId.of(homeId.getValue()), homeScore,
+                    EntityId.of(awayId.getValue()), awayScore)
             );
     }
 

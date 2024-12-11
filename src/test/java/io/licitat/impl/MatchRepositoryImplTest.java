@@ -1,5 +1,6 @@
 package io.licitat.impl;
 
+import io.licitat.data.EntityId;
 import io.licitat.soccer.Score;
 import io.licitat.test_data.TeamId;
 import io.licitat.test_data.TestMatchFactory;
@@ -25,8 +26,8 @@ public class MatchRepositoryImplTest {
         var persisted = repo.FindMatch(newMatch.getId());
 
         assertTrue(persisted.isPresent());
-        assertEquals(TeamId.Brazil.getValue(), persisted.get().getHomeTeam().id());
-        assertEquals(TeamId.Italy.getValue(), persisted.get().getAwayTeam().id());
+        assertEquals(EntityId.of(TeamId.Brazil.getValue()), persisted.get().getHomeTeam().id());
+        assertEquals(EntityId.of(TeamId.Italy.getValue()), persisted.get().getAwayTeam().id());
     }
 
     @Test

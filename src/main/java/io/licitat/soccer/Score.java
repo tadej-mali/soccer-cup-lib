@@ -1,21 +1,23 @@
 package io.licitat.soccer;
 
+import io.licitat.data.EntityId;
+
 import java.util.Objects;
 
 /**
  * A record describing a score update.
  */
 public final class Score {
-    private final int homeTeamId;
+    private final EntityId<Team> homeTeamId;
     private final int homeTeamScore;
-    private final int awayTeamId;
+    private final EntityId<Team> awayTeamId;
     private final int awayTeamScore;
 
 
-    public Score(int homeTeamId, int homeTeamScore, int awayTeamId, int awayTeamScore) {
-        assert homeTeamId > 0 : "Invalid home team Id";
+    public Score(EntityId<Team> homeTeamId, int homeTeamScore, EntityId<Team> awayTeamId, int awayTeamScore) {
+        assert homeTeamId.value() > 0 : "Invalid home team Id";
         assert homeTeamScore >= 0 : "Invalid home score";
-        assert awayTeamId > 0 : "Invalid away team Id";
+        assert awayTeamId.value() > 0 : "Invalid away team Id";
         assert awayTeamScore >= 0 : "Invalid away score";
 
         this.homeTeamId = homeTeamId;
@@ -36,10 +38,10 @@ public final class Score {
     }
 
     public Score update(Score newScore) {
-        assert newScore.awayTeamId == awayTeamId : "Invalid away team";
+        assert newScore.awayTeamId.equals(awayTeamId) : "Invalid away team";
         assert newScore.awayTeamScore >= awayTeamScore : "Invalid new away team score";
 
-        assert newScore.homeTeamId == homeTeamId : "Invalid home team";
+        assert newScore.homeTeamId.equals(homeTeamId) : "Invalid home team";
         assert newScore.homeTeamScore >= homeTeamScore : "Invalid new home team score";
 
         return new Score(
@@ -53,9 +55,9 @@ public final class Score {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (Score) obj;
-        return this.homeTeamId == that.homeTeamId &&
+        return this.homeTeamId.equals(that.homeTeamId) &&
                 this.homeTeamScore == that.homeTeamScore &&
-                this.awayTeamId == that.awayTeamId &&
+                this.awayTeamId.equals(that.awayTeamId) &&
                 this.awayTeamScore == that.awayTeamScore;
     }
 
@@ -84,13 +86,5 @@ public final class Score {
 
     public int totalScore() {
         return homeTeamScore + awayTeamScore;
-    }
-
-    public int homeTeamId() {
-        return homeTeamId;
-    }
-
-    public int awayTeamId() {
-        return awayTeamId;
     }
 }

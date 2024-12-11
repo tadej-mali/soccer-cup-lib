@@ -1,5 +1,6 @@
 package io.licitat.impl;
 
+import io.licitat.data.EntityId;
 import io.licitat.data.MatchRepository;
 import io.licitat.soccer.Match;
 import io.licitat.soccer.Score;
@@ -34,8 +35,8 @@ public class ScoreboardImplTest {
             TestTeamFactory.getById(TeamId.Argentina)
         );
 
-        assertEquals(newMatch.getHomeTeam().id(), TeamId.Germany.getValue());
-        assertEquals(newMatch.getAwayTeam().id(), TeamId.Argentina.getValue());
+        assertEquals(newMatch.getHomeTeam().id(), EntityId.of(TeamId.Germany.getValue()));
+        assertEquals(newMatch.getAwayTeam().id(), EntityId.of(TeamId.Argentina.getValue()));
         assertEquals(0, newMatch.getHomeScore());
         assertEquals(0, newMatch.getAwayScore());
 
@@ -128,8 +129,8 @@ public class ScoreboardImplTest {
             () -> board.UpdateScore(
                 TestMatchFactory.getNextMatchId(),
                     new Score(
-                        TeamId.Slovenia.getValue(), 3,
-                        TeamId.Portugal.getValue(), 1)
+                        EntityId.of(TeamId.Slovenia.getValue()), 3,
+                        EntityId.of(TeamId.Portugal.getValue()), 1)
             )
         );
     }
